@@ -28,6 +28,20 @@ export default function LoginPage() {
     setLoading(false);
   };
 
+  // 🟢 ฟังก์ชันสำหรับล็อกอินด้วย Google ที่เพิ่มเข้ามา
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/`,
+      },
+    });
+
+    if (error) {
+      setMessage({ text: 'ไม่สามารถล็อกอินด้วย Google ได้', type: 'error' });
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#fff0f8] via-white to-[#f4f0ff] p-6 font-sans relative">
       
@@ -87,11 +101,32 @@ export default function LoginPage() {
           <button 
             type="submit"
             disabled={loading}
-            className="w-full bg-[#0a192f] hover:bg-gray-800 text-white font-bold py-4 rounded-2xl shadow-md transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:transform-none mt-6"
+            className="w-full bg-[#0a192f] hover:bg-gray-800 text-white font-bold py-4 rounded-2xl shadow-md transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:transform-none mt-2"
           >
             {loading ? 'Logging in...' : 'Log in'}
           </button>
         </form>
+
+        {/* เส้นคั่นระหว่างฟอร์มปกติกับ Google Login */}
+        <div className="flex items-center my-6">
+          <div className="flex-grow border-t border-gray-200"></div>
+          <span className="px-3 text-sm text-gray-400 font-medium">Or</span>
+          <div className="flex-grow border-t border-gray-200"></div>
+        </div>
+
+        {/* 🟢 ปุ่ม Sign in with Google ที่เพิ่มเข้ามา */}
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          className="w-full flex items-center justify-center gap-3 border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 font-bold py-3.5 rounded-2xl shadow-sm transition-all transform hover:-translate-y-0.5"
+        >
+          <img 
+            src="https://www.svgrepo.com/show/475656/google-color.svg" 
+            className="w-5 h-5" 
+            alt="Google logo"
+          />
+          <span>Sign in with Google</span>
+        </button>
 
         <div className="mt-8 text-center border-t border-gray-50 pt-6">
           <p className="text-sm text-gray-500">
