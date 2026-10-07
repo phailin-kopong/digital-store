@@ -100,26 +100,16 @@ export default function Home() {
     setCart(cart.filter(item => item.id !== productId));
   };
 
+  // 🟢 แก้ไขตรงนี้: ฟังก์ชันจำลองการชำระเงินสำหรับพรีเซนต์
   const handleCheckout = async () => {
     if (cart.length === 0) return;
     setLoadingCheckout(true);
-    try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cart }),
-      });
-      const data = await res.json();
-      
-      if (data.url) {
-        window.location.href = data.url; 
-      } else {
-        alert('Stripe Error: ' + data.error);
-      }
-    } catch (error) {
-      alert('Network Error: เซิร์ฟเวอร์อาจจะหยุดทำงาน');
-    }
-    setLoadingCheckout(false);
+    
+    // จำลองเวลาประมวลผล 2 วินาที แล้วพาเด้งไปหน้า success ทันที
+    setTimeout(() => {
+      setLoadingCheckout(false);
+      window.location.href = '/success'; 
+    }, 2000);
   };
 
   const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);
@@ -193,6 +183,8 @@ export default function Home() {
           <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-[#0a192f] hover:text-purple-600 transition">Home</button>
           <button onClick={() => document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' })} className="text-gray-500 hover:text-purple-600 transition">Products</button>
           <button onClick={() => setIsCartOpen(true)} className="text-gray-500 hover:text-purple-600 transition">Checkout</button>
+          {/* ลิงก์ไปหน้า Admin */}
+          <Link href="/admin" className="text-purple-500 hover:text-purple-700 transition">Admin Panel</Link>
         </div>
 
         <div className="flex items-center space-x-4">
