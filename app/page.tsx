@@ -54,6 +54,9 @@ export default function Home() {
   const [activeCategory, setActiveCategory] = useState('All');
   
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  
+  // 🟢 เพิ่ม State สำหรับเปิด/ปิดเมนูโปรไฟล์
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   useEffect(() => {
     async function loadProducts() {
@@ -80,6 +83,7 @@ export default function Home() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setCart([]);
+    setIsProfileMenuOpen(false); // ปิดเมนูหลังจากล็อกเอาท์
   };
 
   const addToCart = (product: Product, e?: React.MouseEvent) => {
@@ -105,7 +109,6 @@ export default function Home() {
     if (cart.length === 0) return;
     setLoadingCheckout(true);
     
-    // จำลองเวลาประมวลผล 2 วินาที แล้วพาเด้งไปหน้า success
     setTimeout(() => {
       setLoadingCheckout(false);
       window.location.href = '/success'; 
@@ -177,7 +180,6 @@ export default function Home() {
           <span className="text-xl font-bold text-[#0a192f] tracking-tight">Digital Store</span>
         </div>
 
-        {/* เมนูตรงกลาง (เอา Admin Panel ออกแล้ว) */}
         <div className="hidden md:flex items-center space-x-8 text-sm font-semibold">
           <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-[#0a192f] hover:text-purple-600 transition">Home</button>
           <button onClick={() => document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' })} className="text-gray-500 hover:text-purple-600 transition">Products</button>
@@ -187,12 +189,46 @@ export default function Home() {
 
         <div className="flex items-center space-x-4">
           {user ? (
-            <div className="w-10 h-10 rounded-full bg-purple-50 text-purple-700 flex items-center justify-center font-bold text-sm cursor-pointer shadow-sm border border-purple-100" onClick={handleLogout} title="Logout">
-                {user.email.charAt(0).toUpperCase()}
+            // 🟢 ระบบเมนูโปรไฟล์ (Dropdown)
+            <div className="relative">
+              <div 
+                className="w-10 h-10 rounded-full bg-purple-50 hover:bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-sm cursor-pointer shadow-sm border border-purple-100 transition" 
+                onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+              >
+                  {user.email.charAt(0).toUpperCase()}
+              </div>
+
+              {/* Popup เมนูโปรไฟล์ */}
+              {isProfileMenuOpen && (
+                <div className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 py-2 z-50 animate-fade-in">
+                  <div className="px-4 py-3 border-b border-gray-50">
+                    <p className="text-xs text-gray-400 font-medium">Signed in as</p>
+                    <p className="text-sm font-bold text-[#0a192f] truncate mt-0.5">{user.email}</p>
+                  </div>
+                  
+                  <Link 
+                    href="/library" 
+                    className="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition"
+                    onClick={() => setIsProfileMenuOpen(false)}
+                  >
+                    🎒 My Library
+                  </Link>
+                  
+                  <div className="border-t border-gray-50 my-1"></div>
+                  
+                  <button 
+                    onClick={handleLogout} 
+                    className="w-full text-left px-4 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 hover:text-red-600 transition"
+                  >
+                    Log out
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <Link href="/login" className="text-sm font-semibold text-purple-600 hover:text-purple-800 transition mr-2">Log in</Link>
           )}
+          
           <button onClick={() => setIsCartOpen(true)} className="flex items-center space-x-2 bg-white px-5 py-2.5 rounded-full shadow-sm border border-gray-100 text-sm font-semibold hover:shadow-md transition text-[#0a192f]">
             <span className="text-blue-500 text-lg">🛍️</span>
             <span>Cart ({cart.length})</span>
