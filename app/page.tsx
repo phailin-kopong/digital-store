@@ -177,13 +177,11 @@ export default function Home() {
           <span className="text-xl font-bold text-[#0a192f] tracking-tight">Digital Store</span>
         </div>
 
-        {/* เมนูตรงกลาง พร้อมลิงก์ Library */}
+        {/* เมนูตรงกลาง (เอา Admin Panel ออกแล้ว) */}
         <div className="hidden md:flex items-center space-x-8 text-sm font-semibold">
           <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-[#0a192f] hover:text-purple-600 transition">Home</button>
           <button onClick={() => document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' })} className="text-gray-500 hover:text-purple-600 transition">Products</button>
           <button onClick={() => setIsCartOpen(true)} className="text-gray-500 hover:text-purple-600 transition">Checkout</button>
-          <Link href="/admin" className="text-purple-500 hover:text-purple-700 transition">Admin Panel</Link>
-          {/* 🟢 เพิ่มลิงก์ My Library ตรงนี้ */}
           <Link href="/library" className="text-pink-500 hover:text-pink-600 font-bold transition">My Library 🎒</Link>
         </div>
 
