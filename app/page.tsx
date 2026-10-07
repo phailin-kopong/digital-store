@@ -100,12 +100,12 @@ export default function Home() {
     setCart(cart.filter(item => item.id !== productId));
   };
 
-  // 🟢 แก้ไขตรงนี้: ฟังก์ชันจำลองการชำระเงินสำหรับพรีเซนต์
+  // จำลองการชำระเงินสำหรับพรีเซนต์
   const handleCheckout = async () => {
     if (cart.length === 0) return;
     setLoadingCheckout(true);
     
-    // จำลองเวลาประมวลผล 2 วินาที แล้วพาเด้งไปหน้า success ทันที
+    // จำลองเวลาประมวลผล 2 วินาที แล้วพาเด้งไปหน้า success
     setTimeout(() => {
       setLoadingCheckout(false);
       window.location.href = '/success'; 
@@ -168,23 +168,23 @@ export default function Home() {
         </div>
       )}
 
-      {/* 2. Navbar ปรับปรุงใหม่ให้กดได้ทุกปุ่ม */}
+      {/* 2. Navbar */}
       <nav className="px-6 py-6 max-w-7xl mx-auto flex justify-between items-center relative z-40">
         <div className="flex items-center space-x-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          {/* โลโก้ใหม่: สี่เหลี่ยมสีม่วง + สามเหลี่ยมสีขาว */}
           <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-400 to-purple-500 rounded-xl flex items-center justify-center text-white shadow-md">
              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L22 20H2L12 2z"/></svg>
           </div>
           <span className="text-xl font-bold text-[#0a192f] tracking-tight">Digital Store</span>
         </div>
 
-        {/* เมนูตรงกลาง */}
+        {/* เมนูตรงกลาง พร้อมลิงก์ Library */}
         <div className="hidden md:flex items-center space-x-8 text-sm font-semibold">
           <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-[#0a192f] hover:text-purple-600 transition">Home</button>
           <button onClick={() => document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' })} className="text-gray-500 hover:text-purple-600 transition">Products</button>
           <button onClick={() => setIsCartOpen(true)} className="text-gray-500 hover:text-purple-600 transition">Checkout</button>
-          {/* ลิงก์ไปหน้า Admin */}
           <Link href="/admin" className="text-purple-500 hover:text-purple-700 transition">Admin Panel</Link>
+          {/* 🟢 เพิ่มลิงก์ My Library ตรงนี้ */}
+          <Link href="/library" className="text-pink-500 hover:text-pink-600 font-bold transition">My Library 🎒</Link>
         </div>
 
         <div className="flex items-center space-x-4">
@@ -302,7 +302,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* จุดนำทาง (Anchor) สำหรับกด Products จาก Navbar แล้วเลื่อนมาตรงนี้ */}
         <div id="products-section" className="pt-16">
           <h2 className="text-3xl font-serif font-bold text-[#0a192f] mb-8">
             {activeCategory === 'All' ? 'Featured' : 'All products'}
